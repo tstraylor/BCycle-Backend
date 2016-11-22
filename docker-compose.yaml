@@ -1,0 +1,20 @@
+# create the bcycle database container
+bcycledb:
+    build: ./db
+    ports:
+        - "3306:3306"
+
+# create the bcycle api container
+bcycleapi:
+    build: ./api
+    ports:
+        - "8080:8080"
+    links:
+        - bcycledb
+    environment:
+        - DB_HOST=bcycledb
+        - DB_NAME=bcycle
+        - DB_USER=root
+        - DB_PASS=password
+        - DB_PORT=3306
+        - API_PORT=8080

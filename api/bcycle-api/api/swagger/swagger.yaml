@@ -1,0 +1,195 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: BCycle App API
+# during dev, should point to your local machine
+host: localhost:8080
+# basePath prefixes all resource paths 
+basePath: /v1
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+
+paths:
+  /station:
+    x-swagger-router-controller: station
+    get:
+      operationId: getAllStations
+      description: | 
+        Returns an array of BCycle Stations. If `Latitude` and `Longitude` are provide the results are reduced to the
+        BCycle stations within the radius specified by `Distance`.
+      parameters:
+        - name: Latitude
+          description: |
+            Latitude of the center search coordinate. If used, `Longitude` is required.
+          in: query
+          type: number
+          format: double
+          required: false
+        - name: Longitude
+          description: |
+            Longitude of the center search coordinate. If used, `Latitude` is required.
+          in: query
+          type: number
+          format: double
+          required: false
+        - name: Distance
+          description: |
+            Default is 1 mile.
+          in: query
+          type: integer
+          default: 1
+          required: false
+          
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Stations"
+            
+    post:
+      operationId: createStation
+      description: Add a new BCycle Station
+      parameters:
+        - name: Station
+          in: body
+          description: The station to be created
+          schema: 
+            $ref: "#/definitions/Station"
+          required: true
+      responses:
+        200:
+          $ref: "#/responses/NewStation200Response"
+          
+        500:
+          $ref: "#/responses/Standard500ErrorResponse"
+          
+  /station/{id}:
+    x-swagger-router-controller: station
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: The station id
+        type: integer
+    get:
+      operationId: getStation
+      description: Returns the BCycle station assocated with the id.
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/Station"
+        400:
+          $ref: "#/responses/RecordDoesNotExistResponse"
+    
+    delete:
+      operationId: removeStation
+      description: Remove the BCycle stations associated with the id
+      responses:
+        200:
+          $ref: "#/responses/DeleteStation200Response"
+          
+        400:
+          $ref: "#/responses/RecordDoesNotExistResponse"
+          
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  
+  Station:
+    required:
+      - Name
+      - Street
+      - City
+      - State
+      - Zip
+      - Docks
+      - Latitude
+      - Longitude
+    properties:
+      id:
+        type: integer
+        format: int64
+      Name:
+        type: string
+      Street:
+        type: string
+      City:
+        type: string
+      State:
+        type: string
+      Zip:
+        type: string
+      Docks:
+        type: integer
+        format: int32
+      Latitude:
+        type: number
+        format: double
+      Longitude:
+        type: number
+        format: double
+      Created:
+        type: string
+        format: date-time
+      Updated:
+        type: string
+        format: date-time
+  
+  Stations:
+    type: array
+    items:
+      $ref: "#/definitions/Station"
+  
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  
+  NewStation:
+    properties:
+      id:
+        type: integer
+        format: int32
+  
+  DeleteStation:
+    properties:
+      rows:
+        type: integer
+        format: int32
+
+responses:
+  NewStation200Response:
+    description: Returns the newly created station id.
+    schema:
+      $ref: "#/definitions/NewStation"
+  
+  DeleteStation200Response:
+    description: Returns the number of stations removed.
+    schema:
+      $ref: "#/definitions/DeleteStation"
+      
+  Standard500ErrorResponse:
+    description: An unexpected error occured.
+    schema:
+      $ref: "#/definitions/Error"
+      
+  RecordDoesNotExistResponse:
+    description: The record requested does not exists.
+    schema:
+      $ref: "#/definitions/Error"

@@ -31,12 +31,13 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
     swaggerExpress.register(app);
 
     // setup the directory that contains the bcycle api documentation
-    app.use(express.static(__dirname + '/public'));
+    app.use(express.static(__dirname + '/public', {index: 'index.html'}));
     // setup the port we will be listening on
     var port = process.env.PORT || 8080;
     app.listen(port);
 
     if (swaggerExpress.runner.swagger.paths['/v1/station']) {
         console.log('try this:\ncurl http://127.0.0.1:' + port + '/v1/station');
+        console.log('api documentation at: http://127.0.0.1:' + port + '/');
     }
 });

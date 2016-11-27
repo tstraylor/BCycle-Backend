@@ -13,7 +13,6 @@ function getAllStationsInRegion(params, callback) {
             con.query(sql, params, function(err, rows) {
                 con.release();
                 if(err) {
-                    console.log(err);
                     callback(err, null);
                 }
                 else {
@@ -36,7 +35,6 @@ function getAllStations(callback) {
             con.query("SELECT * FROM station", function (err, rows) {
                 con.release();
                 if (err) {
-                    console.log(err);
                     callback(err, null);
                 }
                 else {
@@ -51,17 +49,16 @@ function getAllStations(callback) {
     }
 }
 
-function getStation(id, callback) {
-
+function getStation(stationid, callback) {
+    console.log('id: ' + stationid);
     try {
         connection.acquire(function(err, con) {
             var sql = "SELECT * FROM station WHERE id = ?"
             var params = [];
-            params.push(id);
+            params.push(stationid);
             con.query(sql, params, function(err, rows) {
                 con.release();
                 if(err) {
-                    console.log(err);
                     callback(err,null);
                 }
                 else {
@@ -76,6 +73,16 @@ function getStation(id, callback) {
     }
 }
 
+// station is an object with the following values:
+// Name - station name
+// Street - street address
+// City - city name
+// State - two letter state
+// Zip - zip code
+// Docks number of docks at the location
+// Latitude - latitude
+// Longitude - longitude
+//
 function createStation(station, callback) {
 
     try {
@@ -107,7 +114,6 @@ function removeStation(id, callback) {
             con.query(sql, params, function(err, rows) {
                 con.release();
                 if(err) {
-                    console.log(err);
                     callback(err,null);
                 }
                 else {

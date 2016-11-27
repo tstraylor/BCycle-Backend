@@ -2,6 +2,7 @@ swagger: "2.0"
 info:
   version: "1.0.0"
   title: BCycle App API
+  description: An API to retreive BCycle station location information.
 # during dev, should point to your local machine
 host: localhost:8080
 # basePath prefixes all resource paths 
@@ -44,7 +45,8 @@ paths:
           description: |
             Default is 1 mile.
           in: query
-          type: integer
+          type: number
+          format: double
           default: 1
           required: false
           
@@ -52,7 +54,9 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Stations"
+            type: array
+            items:
+              $ref: "#/definitions/Station"
             
     post:
       operationId: createStation
@@ -79,6 +83,7 @@ paths:
         required: true
         description: The station id
         type: integer
+        format: int64
     get:
       operationId: getStation
       description: Returns the BCycle station assocated with the id.
@@ -86,7 +91,9 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/Station"
+            type: array
+            items:
+              $ref: "#/definitions/Station"
         400:
           $ref: "#/responses/RecordDoesNotExistResponse"
     
@@ -106,6 +113,7 @@ paths:
 definitions:
   
   Station:
+    type: object
     required:
       - Name
       - Street
@@ -144,13 +152,9 @@ definitions:
       Updated:
         type: string
         format: date-time
-  
-  Stations:
-    type: array
-    items:
-      $ref: "#/definitions/Station"
-  
+
   Error:
+    type: object
     required:
       - code
       - message
@@ -162,12 +166,14 @@ definitions:
         type: string
   
   NewStation:
+    type: object
     properties:
       id:
         type: integer
         format: int32
   
   DeleteStation:
+    type: object
     properties:
       rows:
         type: integer

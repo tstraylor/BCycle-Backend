@@ -7,16 +7,15 @@ var bcycledb = require('../helpers/bcycledb');
 
 function getAllStations(req, res) {
 
-    var distance = req.swagger.params.Distance.value || 1;
+    var distance = req.swagger.params.Distance.value || 1.0;
     var latitude = req.swagger.params.Latitude.value;
     var longitude = req.swagger.params.Longitude.value;
 
     if(latitude === undefined || longitude === undefined) {
         bcycledb.getAllStations(function(err, rows) {
             if(err) {
-                console.log(err);
-                res.status(err.status || 500);
-                res.json({message: err.message, error: err });
+                res.status(500);
+                res.json({code: 500, message: err.message});
             }
             else {
                 res.json(rows);
@@ -26,7 +25,7 @@ function getAllStations(req, res) {
     else {
 
         // calculate the region to search based on the
-        // latitude and longitude and the dististance
+        // latitude and longitude and the distance
         // from that point.
         var loc = new geopoint(latitude, longitude);
         var bounds = loc.boundingCoordinates(distance);
@@ -39,9 +38,8 @@ function getAllStations(req, res) {
 
         bcycledb.getAllStationsInRegion(params, function(err, rows) {
             if(err) {
-                console.log(err);
-                res.status(err.status || 500);
-                res.json({message: err.message, error: err });
+                res.status(500);
+                res.json({code: 500,  message: err.message});
             }
             else {
                 res.json(rows);
@@ -55,9 +53,8 @@ function getStation(req, res) {
     bcycledb.getStation(req.swagger.params.id.value, function(err, rows) {
 
         if(err) {
-            console.log(err);
-            res.status(err.status || 500);
-            res.json({message: err.message, error: err });
+            res.status(500);
+            res.json({code: 500, message: err.message});
         }
         else {
             res.json(rows);
@@ -80,6 +77,7 @@ function createStation(req, res) {
     bcycledb.createStation(station, function(err, rows) {
 
         if(err) {
+            res.status(500);
             res.json({code: 500, message: err});
         }
         else {
@@ -93,9 +91,8 @@ function removeStation(req, res) {
     bcycledb.removeStation(req.swagger.params.id.value, function(err, rows) {
 
         if(err) {
-            console.log(err);
-            res.status(err.status || 500);
-            res.json({message: err.message, error: err });
+            res.status(500);
+            res.json({code: 500, message: err});
         }
         else {
             res.json({rows: rows.affectedRows});

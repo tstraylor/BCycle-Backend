@@ -1,22 +1,13 @@
-FROM mysql:5.6
-
-# update the environment
-RUN apt-get update
-# make a data directory
-RUN mkdir -p /app/data
-ADD bcycledb.sql /app/data
-# move the scripts used to configure the
-# database and environment into the container
-ADD entrypoint.sh /app
-RUN chmod +x /app/*.sh
+FROM mysql/mysql-server:5.6
+# https://hub.docker.com/r/mysql/mysql-server/
+# add our sql script to the directory so the database
+# can be created
+ADD bcycledb.sql /docker-entrypoint-initdb.d/
 
 # set up some environment variables
 ENV MYSQL_ROOT_PASSWORD password
-ENV SERVICE_3306_NAME=bcycle
+ENV MYSQL_DATABASE bcycle
+ENV MYSQL_ROOT_HOST "%"
 
 # let the container know which port to listen on
 EXPOSE 3306
-
-# Once the contain is up and running, start the database
-ENTRYPOINT ["/app/entrypoint.sh"]
-CMD ["/usr/bin/mysqld_safe"]

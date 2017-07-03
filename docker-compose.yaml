@@ -3,6 +3,10 @@ bcycledb:
     build: ./db
     ports:
         - "3306:3306"
+    environment:
+        - MYSQL_ROOT_PASSWORD=password
+        - MYSQL_DATABASE=bcycle
+        - MYSQL_ROOT_HOST=%
 
 # create the bcycle api container
 bcycleapi:

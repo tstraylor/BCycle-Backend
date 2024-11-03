@@ -1,11 +1,13 @@
 openapi: 3.0.1
 info:
-  title: Bcycle API
-  description: Bcycle API
-  version: 1.0.0
+  title: BCycle API
+  description: An API to manage the BCycle stations.
+  version: 1.2.0
   contact:
     name: Thomas Traylor
-
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit
 servers:
   - url: http://{host}:{port}/{basePath}
     description: The API server path.
@@ -79,7 +81,7 @@ paths:
       operationId: getStation
       tags:
         - Stations
-      description: Get the Bcycle station associated with the `station_id`.
+      description: Get the BCycle station associated with the `station_id`.
       parameters:
         - $ref: "#/components/parameters/station_id"
       responses:
@@ -94,7 +96,7 @@ paths:
       operationId: removeStation
       tags:
         - Stations
-      description: Remove the Bcycle stations specified by the `station_id`.
+      description: Remove the BCycle stations specified by the `station_id`.
       parameters:
         - $ref: "#/components/parameters/station_id"
       responses:

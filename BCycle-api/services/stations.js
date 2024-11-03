@@ -28,9 +28,6 @@ function getStations(parameters) {
       if (err) {
         return reject(createError.InternalServerError(err));
       }
-      if (results.length === 0) {
-        return reject(createError.NotFound('Stations not found'));
-      }
 
       return resolve(results);
     });

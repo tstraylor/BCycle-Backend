@@ -1,14 +1,12 @@
-FROM alpine:3.18 AS alpine_base
+FROM alpine:3.20 AS alpine_base
 
-RUN apk update && apk upgrade && apk add --no-cache su-exec bash rsync && \
-    apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu && \
-    rm -rf /var/cache/apk/*
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache su-exec bash rsync && \
+    apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu
 
 FROM alpine_base AS db_server
 
 RUN apk add --no-cache mariadb mariadb-client mariadb-common \
     mariadb-server-utils mysql mysql-client tzdata pwgen && \
-    rm -rf /var/cache/apk/* && \
     mkdir /docker-entrypoint-initdb.d && \
     mkdir -p /run/mysqld && \
     chmod 777 /run/mysqld && \
@@ -31,7 +29,7 @@ CMD ["mysqld"]
 
 FROM alpine_base AS api_server
 
-RUN apk add --no-cache nodejs npm && rm -rf /var/cache/apk/*
+RUN apk add --no-cache nodejs npm
 
 COPY ./BCycle-api /opt/BCycle-api
 
@@ -43,7 +41,7 @@ CMD [ "npm", "start" ]
 
 FROM alpine_base AS web_server
 
-RUN apk add --no-cache nginx && rm -rf /var/cache/apk/*
+RUN apk add --no-cache nginx
 
 COPY ./web/default.conf /etc/nginx/http.d/default.conf
 

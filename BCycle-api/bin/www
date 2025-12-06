@@ -26,13 +26,13 @@ const http = require('http');
 
 console.log('BCycle API starting');
 /**
- * Get port from environment and store in Express.
+ * Get port from the environment and store in Express.
  */
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
+ * Create an HTTP server.
  */
 const server = http.createServer(app);
 

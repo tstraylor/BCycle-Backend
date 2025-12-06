@@ -1,9 +1,9 @@
 const _ = require('lodash');
-const Router = require('express-promise-router');
+const express = require('express');
 const GeoPoint = require('geopoint');
 const stationService = require('../services/stations');
 
-const router = new Router();
+const router = express.Router();
 
 function getQueryParameters(req) {
   const parameters = {};

@@ -1,7 +1,7 @@
-FROM alpine:3.20 AS alpine_base
+FROM alpine:3.23 AS alpine_base
 
-RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache su-exec bash rsync && \
-    apk add --no-cache --repository=https://dl-cdn.alpinelinux.org/alpine/edge/testing/ gosu
+RUN apk update --no-cache && apk upgrade --no-cache && apk add --no-cache su-exec bash rsync gosu
+
 
 FROM alpine_base AS db_server
 

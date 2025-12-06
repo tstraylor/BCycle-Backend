@@ -1,5 +1,4 @@
 const createError = require('http-errors');
-const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 const morgan = require('morgan');
@@ -14,7 +13,6 @@ app.set('view engine', 'ejs');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // setup logging
@@ -41,18 +39,20 @@ app.use(
 // set up the routes
 app.use('/', stationsRouter);
 
-app.get('*', (req, res, next) => { // eslint-disable-line no-unused-vars
-  res.status(404).json({ code: 404, message: 'Route not found.' });
-});
-
-// catch 404 and forward to error handler
+// catch 404 and forward to the error handler
 app.use((req, res, next) => { // eslint-disable-line no-unused-vars
   next(createError(404));
 });
 
 // error handler
-app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
-  res.status(err.status).json({ code: err.status, message: err.toString() });
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
 });
 
 module.exports = app;

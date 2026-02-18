@@ -8,7 +8,8 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.0.1",
+    "qs": ">=6.14.2"
   },
   "dependencies": {
     "debug": "^4.4.3",
